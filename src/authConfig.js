@@ -52,7 +52,7 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["User.Read", "Mail.Read", "Mail.ReadBasic", "Mail.ReadWrite", "Mail.Send"]
+    scopes: ["User.Read", "Mail.Read", "Mail.ReadBasic", "Mail.ReadWrite"]
 };
 
 /**
@@ -63,8 +63,3 @@ export const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
     graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?%24top=100" //added by me
 };
-
-// added by me
-export const getMails = {
-    scopes: ["Mail.Read", "Mail.ReadBasic", "Mail.ReadWrite", "Mail.Send"]
-}
