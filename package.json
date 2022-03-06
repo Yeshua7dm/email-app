@@ -7,6 +7,7 @@
     "@azure/msal-browser": "^2.15.0",
     "@azure/msal-react": "^1.0.1",
     "bootstrap": "^4.5.3",
+    "he": "^1.2.0",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "react": "^17.0.1",

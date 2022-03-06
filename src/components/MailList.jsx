@@ -2,8 +2,9 @@ import { useMsal } from "@azure/msal-react";
 import React, { useState, useEffect } from "react";
 import { Spinner, Button } from "react-bootstrap";
 import { loginRequest } from "../authConfig";
-import { getInbox } from "../graph";
+import { getInbox, updateReadStatus } from "../graph";
 import MailItem from "./MailItem";
+var HE = require("he");
 
 /**
  * Renders information about the signed-in user or a button to retrieve data about the user
@@ -12,7 +13,7 @@ import MailItem from "./MailItem";
 export const MailList = () => {
   const { instance, accounts } = useMsal();
   const [topMails, setTopMails] = useState([]);
-  const [selectedMail, setSelectedMail] = useState(null)
+  const [selectedMailBody, setSelectedMail] = useState("");
 
   useEffect(() => {
     function RequestProfileAndEmailData() {
@@ -35,10 +36,24 @@ export const MailList = () => {
   const handleClick = (id) => {
     const mailSelected = topMails.filter((mail) => mail.id === id).pop();
     console.log(mailSelected);
-    setSelectedMail(mailSelected)
+    let mailBody = mailSelected.body.content
+      .replace(/<!--/g, "")
+      .replace(/-->/g, "")
+      .replace(/&amp;/g, "&")
+      .replace(/&quot;/g, '"')
+      .replace(/&#039;/g, "'");
+    console.log(mailBody);
   };
 
-
+  const updateMail = (id) => {
+    instance
+      .acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+      .then((response) => {
+        updateReadStatus(response.accessToken, id).then((response) =>
+          console.log(response)
+        );
+      });
+  };
 
   return (
     <>

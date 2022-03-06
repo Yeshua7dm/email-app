@@ -36,4 +36,23 @@ export async function getInbox(accessToken) {
         .catch(error => console.log(error));
 }
 
+export async function updateReadStatus(accessToken, mailID) {
+    const headers = new Headers();
+    const bearer = `Bearer ${accessToken}`;
+
+    headers.append("Authorization", bearer);
+    headers.append("Content-Type", "application/json")
+
+    const options = {
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify({isRead: true})
+    };
+
+    return fetch(`${graphConfig.graphUpdateMsg}/${mailID}`, options)
+        .then(response => response.json())
+        .catch(error => console.log(error));
+}
+
+
 
