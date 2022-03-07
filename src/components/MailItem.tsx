@@ -1,7 +1,25 @@
-import React from "react";
+import * as React from "react";
 import { Card, Button } from "react-bootstrap";
 
-const MailItem = ({ mail, readMail }) => {
+interface mailBody {
+  id: string,
+  subject: string,
+  bodyPreview: string,
+  isRead: boolean,
+  sender: senderPrototype
+}
+interface senderPrototype {
+  emailAddress: emailAddress
+}
+interface emailAddress {
+  name: string,
+  address: string
+}
+interface MailItemProps {
+  mail: mailBody,
+  readMail: Function
+}
+const MailItem = ({ mail, readMail }:MailItemProps) => {
   return (
     // <div>
     <Card
