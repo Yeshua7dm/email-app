@@ -14,7 +14,7 @@ export const msalConfig = {
     auth: {
         clientId: "780a81eb-375a-4ff7-9778-a97f0afd948b",
         authority: "https://login.microsoftonline.com/common",
-        // redirectUri: "http://localhost:3000/"
+        redirectUri: "https://ms-email-joshua.netlify.app"
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
