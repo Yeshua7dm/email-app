@@ -61,6 +61,7 @@ export const loginRequest = {
  */
 export const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
-    graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?%24top=100",
+    // graphMeInbox: "https://graph.microsoft.com/v1.0/me/messages?%24top=20",
+    graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?%24filter=isRead+eq+false&%24top=10",
     graphUpdateMsg: "https://graph.microsoft.com/v1.0/me/messages" //added by me
 };
