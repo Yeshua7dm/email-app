@@ -1,7 +1,9 @@
-import React from "react";
+import * as React from "react";
 import { Card, Button } from "react-bootstrap";
+import { MailItemProps } from "../interfaces"
 
-const MailItem = ({ mail, readMail }) => {
+
+const MailItem = ({ mail, readMail }: MailItemProps) => {
   return (
     // <div>
     <Card
@@ -24,7 +26,7 @@ const MailItem = ({ mail, readMail }) => {
       </Card.Body>
       <Card.Footer className="text-right">
         {!mail.isRead ? (
-          <Button variant="primary" onClick={()=>{readMail(mail.id)}}>
+          <Button variant="primary" onClick={() => { readMail(mail.id) }}>
             Read Mail
           </Button>
         ) : (

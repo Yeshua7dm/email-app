@@ -14,7 +14,7 @@ export const msalConfig = {
     auth: {
         clientId: "780a81eb-375a-4ff7-9778-a97f0afd948b",
         authority: "https://login.microsoftonline.com/common",
-        redirectUri: "http://localhost:3000/"
+        redirectUri: "https://ms-email-joshua.netlify.app"
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
@@ -22,7 +22,7 @@ export const msalConfig = {
     },
     system: {
         loggerOptions: {
-            loggerCallback: (level, message, containsPii) => {
+            loggerCallback: (level: any, message: any, containsPii: any) => {
                 if (containsPii) {
                     return;
                 }
@@ -51,7 +51,7 @@ export const msalConfig = {
  * For more information about OIDC scopes, visit: 
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
-export const loginRequest = {
+export const loginRequest : { scopes: string[]; } = {
     scopes: ["User.Read", "Mail.Read", "Mail.ReadBasic", "Mail.ReadWrite"]
 };
 
@@ -61,7 +61,6 @@ export const loginRequest = {
  */
 export const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
-    // graphMeInbox: "https://graph.microsoft.com/v1.0/me/messages?%24top=20",
-    graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?%24filter=isRead+eq+false&%24top=10",
+    graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?$filter=isRead+eq+false&$top=20&$select=body,sender,isRead,subject,bodyPreview",
     graphUpdateMsg: "https://graph.microsoft.com/v1.0/me/messages" //added by me
 };

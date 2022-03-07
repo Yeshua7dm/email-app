@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { PageLayout } from "./components/PageLayout";
 import { MainContent } from "./components/MainContent";
 import "./styles/App.css";
