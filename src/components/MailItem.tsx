@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Card, Button } from "react-bootstrap";
-import {MailItemProps} from "../interfaces"
+import { MailItemProps } from "../interfaces"
 
 
 const MailItem = ({ mail, readMail }: MailItemProps) => {
