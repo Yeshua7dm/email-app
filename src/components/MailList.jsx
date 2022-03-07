@@ -13,13 +13,16 @@ const Parser = new DOMParser();
 export const MailList = () => {
   const { instance, accounts } = useMsal();
   const [topMails, setTopMails] = useState([]);
-  const [selectedMailID, setSelectedMailID] = useState("");
+  const [selectedMail, setSelectedMail] = useState(null);
   const [mailBody, setMailBody] = useState("");
 
   //   functionalities for the Modal
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const modalCloser = () => {
+    updateMail(selectedMail.id);
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -31,26 +34,23 @@ export const MailList = () => {
           account: accounts[0],
         })
         .then((response) => {
-          getInbox(response.accessToken).then((response) => {
-            console.log(response);
-            setTopMails(response.value);
-          });
+          getInbox(response.accessToken).then((response) =>
+            setTopMails(response.value)
+          );
         });
     }
     RequestProfileAndEmailData();
   }, []);
 
   const handleClick = (id) => {
-    setSelectedMailID(id);
     const mailSelected = topMails.filter((mail) => mail.id === id).pop();
-    console.log(mailSelected);
-    let mailBody = mailSelected.body.content
+    setSelectedMail(mailSelected);
+    const mailBody = mailSelected.body.content
       .replace(/<!--/g, "")
       .replace(/-->/g, "")
       .replace(/&amp;/g, "&")
       .replace(/&quot;/g, '"')
       .replace(/&#039;/g, "'");
-    console.log(mailBody);
     setMailBody(mailBody);
     handleShow();
   };
@@ -59,9 +59,19 @@ export const MailList = () => {
     instance
       .acquireTokenSilent({ ...loginRequest, account: accounts[0] })
       .then((response) => {
-        updateReadStatus(response.accessToken, id).then((response) =>
-          console.log(response)
-        );
+        updateReadStatus(response.accessToken, id).then((response) => {
+          if (response.isRead) {
+            console.log(response.isRead);
+            console.log(selectedMail);
+            setTopMails(
+              topMails.map((mail) =>
+                mail.id === selectedMail.id
+                  ? { ...mail, isRead: !mail.isRead }
+                  : mail
+              )
+            );
+          }
+        });
       });
   };
 
@@ -78,18 +88,17 @@ export const MailList = () => {
       )}
 
       <Modal
-        onHide={handleClose}
         show={show}
-        fullscreen={true}
+        // fullscreen={true}
         backdrop="static"
         keyboard={false}
-        size="lg"
+        size="xl"
       >
         <Modal.Body>
           {<div dangerouslySetInnerHTML={{ __html: mailBody }} />}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={handleClose}>
+          <Button variant="success" onClick={modalCloser}>
             Mark as Read
           </Button>
         </Modal.Footer>
