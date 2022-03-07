@@ -51,7 +51,7 @@ export const msalConfig = {
  * For more information about OIDC scopes, visit: 
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
-export const loginRequest : object = {
+export const loginRequest : { scopes: string[]; } = {
     scopes: ["User.Read", "Mail.Read", "Mail.ReadBasic", "Mail.ReadWrite"]
 };
 
@@ -62,6 +62,6 @@ export const loginRequest : object = {
 export const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
     // graphMeInbox: "https://graph.microsoft.com/v1.0/me/messages?%24top=20",
-    graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?%24filter=isRead+eq+false&%24top=10",
+    graphMeInbox: "https://graph.microsoft.com/v1.0/me/mailFolders('Inbox')/messages?$filter=isRead+eq+false&$top=10&$select=body,sender,isRead,subject,bodyPreview",
     graphUpdateMsg: "https://graph.microsoft.com/v1.0/me/messages" //added by me
 };

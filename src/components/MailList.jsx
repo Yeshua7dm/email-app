@@ -1,7 +1,7 @@
 import { useMsal } from "@azure/msal-react";
 import React, { useState, useEffect } from "react";
 import { Spinner, Button, Modal } from "react-bootstrap";
-import { loginRequest } from "../authConfig.ts";
+import { loginRequest } from "../authConfig";
 import { getInbox, updateReadStatus } from "../graph";
 import MailItem from "./MailItem";
 const Parser = new DOMParser();
@@ -13,6 +13,7 @@ const Parser = new DOMParser();
 export const MailList = () => {
   const { instance, accounts } = useMsal();
   const [topMails, setTopMails] = useState([]);
+  // const [selectedMail, setSelectedMail] = useState(null);
   const [selectedMail, setSelectedMail] = useState(null);
   const [mailBody, setMailBody] = useState("");
 
@@ -45,6 +46,7 @@ export const MailList = () => {
   const handleClick = (id) => {
     const mailSelected = topMails.filter((mail) => mail.id === id).pop();
     setSelectedMail(mailSelected);
+    console.log(mailSelected)
     const mailBody = mailSelected.body.content
       .replace(/<!--/g, "")
       .replace(/-->/g, "")

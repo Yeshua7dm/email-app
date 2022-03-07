@@ -1,10 +1,10 @@
-import { graphConfig } from "./authConfig.ts";
+import { graphConfig } from "./authConfig";
 
 /**
  * Attaches a given access token to a MS Graph API call. Returns information about the user
  * @param accessToken 
  */
-export async function callMsGraph(accessToken) {
+export async function callMsGraph(accessToken: string) {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;
 
@@ -20,7 +20,7 @@ export async function callMsGraph(accessToken) {
         .catch(error => console.log(error));
 }
 
-export async function getInbox(accessToken) {
+export async function getInbox(accessToken: string) {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;
 
@@ -36,7 +36,7 @@ export async function getInbox(accessToken) {
         .catch(error => console.log(error));
 }
 
-export async function updateReadStatus(accessToken, mailID) {
+export async function updateReadStatus(accessToken: string, mailID: string) {
     const headers = new Headers();
     const bearer = `Bearer ${accessToken}`;
 

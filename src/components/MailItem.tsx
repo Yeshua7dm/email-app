@@ -1,25 +1,9 @@
 import * as React from "react";
 import { Card, Button } from "react-bootstrap";
+import {MailItemProps} from "../interfaces"
 
-interface mailBody {
-  id: string,
-  subject: string,
-  bodyPreview: string,
-  isRead: boolean,
-  sender: senderPrototype
-}
-interface senderPrototype {
-  emailAddress: emailAddress
-}
-interface emailAddress {
-  name: string,
-  address: string
-}
-interface MailItemProps {
-  mail: mailBody,
-  readMail: Function
-}
-const MailItem = ({ mail, readMail }:MailItemProps) => {
+
+const MailItem = ({ mail, readMail }: MailItemProps) => {
   return (
     // <div>
     <Card
@@ -42,7 +26,7 @@ const MailItem = ({ mail, readMail }:MailItemProps) => {
       </Card.Body>
       <Card.Footer className="text-right">
         {!mail.isRead ? (
-          <Button variant="primary" onClick={()=>{readMail(mail.id)}}>
+          <Button variant="primary" onClick={() => { readMail(mail.id) }}>
             Read Mail
           </Button>
         ) : (
