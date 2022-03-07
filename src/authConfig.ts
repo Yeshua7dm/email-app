@@ -22,7 +22,7 @@ export const msalConfig = {
     },
     system: {
         loggerOptions: {
-            loggerCallback: (level, message, containsPii) => {
+            loggerCallback: (level: any, message: any, containsPii: any) => {
                 if (containsPii) {
                     return;
                 }
@@ -51,7 +51,7 @@ export const msalConfig = {
  * For more information about OIDC scopes, visit: 
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
-export const loginRequest = {
+export const loginRequest : object = {
     scopes: ["User.Read", "Mail.Read", "Mail.ReadBasic", "Mail.ReadWrite"]
 };
 

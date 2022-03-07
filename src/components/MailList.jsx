@@ -1,7 +1,7 @@
 import { useMsal } from "@azure/msal-react";
 import React, { useState, useEffect } from "react";
 import { Spinner, Button, Modal } from "react-bootstrap";
-import { loginRequest } from "../authConfig";
+import { loginRequest } from "../authConfig.ts";
 import { getInbox, updateReadStatus } from "../graph";
 import MailItem from "./MailItem";
 const Parser = new DOMParser();

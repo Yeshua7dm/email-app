@@ -5,7 +5,7 @@ import "./styles/index.css";
 import App from "./App.jsx";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { MsalProvider } from "@azure/msal-react";
-import { msalConfig } from "./authConfig";
+import { msalConfig } from "./authConfig.ts";
 
 /**
  * Initialize a PublicClientApplication instance which is provided to the MsalProvider component
