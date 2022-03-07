@@ -1,10 +1,10 @@
 import { useMsal } from "@azure/msal-react";
 import React, { useState, useEffect } from "react";
-import { Spinner, Button } from "react-bootstrap";
+import { Spinner, Button, Modal } from "react-bootstrap";
 import { loginRequest } from "../authConfig";
 import { getInbox, updateReadStatus } from "../graph";
 import MailItem from "./MailItem";
-var HE = require("he");
+const Parser = new DOMParser();
 
 /**
  * Renders information about the signed-in user or a button to retrieve data about the user
@@ -13,7 +13,14 @@ var HE = require("he");
 export const MailList = () => {
   const { instance, accounts } = useMsal();
   const [topMails, setTopMails] = useState([]);
-  const [selectedMailBody, setSelectedMail] = useState("");
+  const [selectedMailID, setSelectedMailID] = useState("");
+  const [mailBody, setMailBody] = useState("");
+
+  //   functionalities for the Modal
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     function RequestProfileAndEmailData() {
@@ -34,6 +41,7 @@ export const MailList = () => {
   }, []);
 
   const handleClick = (id) => {
+    setSelectedMailID(id);
     const mailSelected = topMails.filter((mail) => mail.id === id).pop();
     console.log(mailSelected);
     let mailBody = mailSelected.body.content
@@ -43,6 +51,8 @@ export const MailList = () => {
       .replace(/&quot;/g, '"')
       .replace(/&#039;/g, "'");
     console.log(mailBody);
+    setMailBody(mailBody);
+    handleShow();
   };
 
   const updateMail = (id) => {
@@ -66,6 +76,24 @@ export const MailList = () => {
       ) : (
         <Spinner animation="border" />
       )}
+
+      <Modal
+        onHide={handleClose}
+        show={show}
+        fullscreen={true}
+        backdrop="static"
+        keyboard={false}
+        size="lg"
+      >
+        <Modal.Body>
+          {<div dangerouslySetInnerHTML={{ __html: mailBody }} />}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleClose}>
+            Mark as Read
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
