@@ -19,11 +19,10 @@ export const PageLayout = (props: any) => {
 
     return (
         <>
-            <Navbar bg="primary" variant="dark">
+            <Navbar bg="secondary" className="px-3 flex-fill flex-row justify-content-between" variant="dark">
                 <a className="navbar-brand" href="/">Ms Email App</a>
                 { isAuthenticated ? <SignOutButton /> : <SignInButton /> }
             </Navbar>
-            <h5>Welcome to the Ms Email App</h5>
             <br />
             <br />
             {props.children}

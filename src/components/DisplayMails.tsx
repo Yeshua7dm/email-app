@@ -1,6 +1,6 @@
 import { useMsal } from "@azure/msal-react";
 import React, { useState, useEffect } from "react";
-import { Spinner, Button, Modal, Tab, Tabs, Container } from "react-bootstrap";
+import { Spinner, Button, Modal, Tab, Tabs, Container, Badge } from "react-bootstrap";
 import { loginRequest } from "../authConfig";
 import { getInbox, updateReadStatus } from "../graph";
 import MailItem from "./MailItem";
@@ -38,6 +38,7 @@ export const DisplayMails = () => {
     });
   const [mailBody, setMailBody] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
+  const [allRead, setAllRead] = useState(0)
 
 
   function FetchUnreadMails() {
@@ -91,12 +92,13 @@ export const DisplayMails = () => {
   const pushReadMail = (email: SingleMail) => {
     const thisMail = { ...email, isRead: !email.isRead }
     setReadMails(() => [thisMail, ...readMails])
+    setAllRead(allRead + 1)
     FetchUnreadMails()
   }
   return (
     <Container>
       <Tabs defaultActiveKey="unreadMails" id="controlled-tab-example" className="mb-3">
-        <Tab eventKey="unreadMails" title="Unread Mails">
+        <Tab eventKey="unreadMails" title={`Last 20 Unread Mails`}>
           {unreadMails !== [] ? (
             unreadMails.map((mail) => (
               <MailItem key={mail.id} mail={mail} readMail={handleClick} />
@@ -105,7 +107,7 @@ export const DisplayMails = () => {
             <Spinner animation="border" />
           )}
         </Tab>
-        <Tab eventKey="readMails" title="Recently Read Mails">
+        <Tab eventKey="readMails" title={`Read Mails (${allRead})`}>
           {readMails !== [] ? (
             readMails.map((mail) => (
               <MailItem key={mail.id} mail={mail} readMail={handleClick} />
