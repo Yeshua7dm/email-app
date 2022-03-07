@@ -43,6 +43,7 @@ export const DisplayMails = () => {
 
   function FetchUnreadMails() {
     // Silently acquires an access token which is then attached to a request for MS Graph data
+    setUnreadMails([])
     instance
       .acquireTokenSilent({
         ...loginRequest,
@@ -57,6 +58,7 @@ export const DisplayMails = () => {
 
   useEffect(() => {
     FetchUnreadMails();
+    console.log(unreadMails.length)
   }, []);
 
   const handleClick = (id: string) => {
@@ -98,24 +100,34 @@ export const DisplayMails = () => {
   return (
     <Container>
       <Tabs defaultActiveKey="unreadMails" id="controlled-tab-example" className="mb-3">
-        <Tab eventKey="unreadMails" title={`Last 20 Unread Mails`}>
-          {unreadMails !== [] ? (
-            unreadMails.map((mail) => (
-              <MailItem key={mail.id} mail={mail} readMail={handleClick} />
-            ))
-          ) : (
-            <Spinner animation="border" />
-          )}
-        </Tab>
-        <Tab eventKey="readMails" title={`Read Mails (${allRead})`}>
-          {readMails !== [] ? (
-            readMails.map((mail) => (
-              <MailItem key={mail.id} mail={mail} readMail={handleClick} />
-            ))
-          ) : (
-            <p>No Mail has been read in this session</p>
-          )}
-        </Tab>
+        {
+          unreadMails.length < 1 && (<Tab eventKey="unreadMails" title={`Loading Last 20 Unread Mails`}>
+            <Spinner animation="grow" variant="success" />
+            <Spinner animation="grow" variant="success" />
+            <Spinner animation="grow" variant="success" />
+            <Spinner animation="grow" variant="success" />
+            <Spinner animation="grow" variant="success" />
+          </Tab>)
+        }
+        {
+          unreadMails.length > 1 && (
+            <Tab eventKey="unreadMails" title={`Last 20 Unread Mails`}>
+              {unreadMails.map((mail) => (
+                <MailItem key={mail.id} mail={mail} readMail={handleClick} />
+              ))}
+            </Tab>
+          )
+        }
+        {/* read mails here */}
+        {
+          readMails.length > 0 && (
+            <Tab eventKey="readMails" title={`Read Mails (${allRead})`}>
+              {readMails.map((mail) => (
+                <MailItem key={mail.id} mail={mail} readMail={() => { console.log('nothing') }} />
+              ))}
+            </Tab>
+          )
+        }
       </Tabs>
 
       <Modal
