@@ -1,5 +1,9 @@
 {
-  "name": "msal-react-quickstart",
+  "name": "ms-email-app",
+  "author": {
+    "name": "Joshua Oke",
+    "email": "yeshua7dm@gmail.com"
+  },
   "version": "0.1.0",
   "description": "A React single-page application calling Microsoft Graph API using MSAL.js (w/ AAD v2 endpoint)",
   "private": true,
