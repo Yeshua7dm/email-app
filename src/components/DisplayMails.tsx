@@ -1,6 +1,6 @@
 import { useMsal } from "@azure/msal-react";
 import React, { useState, useEffect } from "react";
-import { Spinner, Button, Modal } from "react-bootstrap";
+import { Spinner, Button, Modal, Tab, Tabs, Container } from "react-bootstrap";
 import { loginRequest } from "../authConfig";
 import { getInbox, updateReadStatus } from "../graph";
 import MailItem from "./MailItem";
@@ -12,57 +12,54 @@ import { SingleMail } from '../interfaces'
  * Renders information about the signed-in user or a button to retrieve data about the user
  */
 
+
+
 export const DisplayMails = () => {
   const { instance, accounts } = useMsal();
-  const [topMails, setTopMails] = useState<SingleMail[]>([]);
-  // const [selectedMail, setSelectedMail] = useState(null);
-  const [selectedMail, setSelectedMail] = useState<SingleMail>({
-    "@odata.etag": "W/\"CQAAABYAAAAiIsqMbYjsT5e/T7KzowPTAAQ+faR0\"",
-    "id": "AAMk",
-    "subject": "Your monthly digest",
-    "bodyPreview": "Private to youHi, Megan Bowen,This is your month in reviewAn in-depth look at your work patterns in the last four weeksInsight of the monthJanuary 9 – February 5Your calendar is usually less than 30% booked when the week star",
-    "isRead": false,
-    "body": {
-      "contentType": "html",
-      "content": "html"
-    },
-    "sender": {
-      "emailAddress": {
-        "name": "Microsoft Viva",
-        "address": "viva-noreply@microsoft.com"
+  const [unreadMails, setUnreadMails] = useState<SingleMail[]>([]);
+  const [readMails, setReadMails] = useState<SingleMail[]>([]);
+  const [selectedMail, setSelectedMail] = useState<SingleMail>(
+    {
+      "@odata.etag": "",
+      "id": "",
+      "subject": "",
+      "bodyPreview": "",
+      "isRead": false,
+      "body": {
+        "contentType": "",
+        "content": ""
+      },
+      "sender": {
+        "emailAddress": {
+          "name": "",
+          "address": ""
+        }
       }
-    }
-  });
-  const [mailBody, setMailBody] = useState("");
+    });
+  const [mailBody, setMailBody] = useState<string>("");
+  const [show, setShow] = useState<boolean>(false);
 
-  //   functionalities for the Modal
-  const [show, setShow] = useState(false);
 
-  const modalCloser = () => {
-    updateMail(selectedMail.id);
-    setShow(false);
-  };
-  const handleShow = () => setShow(true);
+  function FetchUnreadMails() {
+    // Silently acquires an access token which is then attached to a request for MS Graph data
+    instance
+      .acquireTokenSilent({
+        ...loginRequest,
+        account: accounts[0],
+      })
+      .then((response) => {
+        getInbox(response.accessToken).then((response) =>
+          setUnreadMails(response.value)
+        );
+      });
+  }
 
   useEffect(() => {
-    function RequestProfileAndEmailData() {
-      // Silently acquires an access token which is then attached to a request for MS Graph data
-      instance
-        .acquireTokenSilent({
-          ...loginRequest,
-          account: accounts[0],
-        })
-        .then((response) => {
-          getInbox(response.accessToken).then((response) =>
-            setTopMails(response.value)
-          );
-        });
-    }
-    RequestProfileAndEmailData();
+    FetchUnreadMails();
   }, []);
 
   const handleClick = (id: string) => {
-    const mailSelected = topMails.filter((mail) => mail.id === id).pop();
+    const mailSelected = unreadMails.filter((mail) => mail.id === id).pop();
     if (mailSelected !== undefined) {
       setSelectedMail(mailSelected)
       console.log(mailSelected)
@@ -73,7 +70,7 @@ export const DisplayMails = () => {
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'");
       setMailBody(mailBody);
-      handleShow();
+      setShow(true)
     }
   };
 
@@ -85,29 +82,39 @@ export const DisplayMails = () => {
           if (response.isRead) {
             console.log(response.isRead);
             console.log(selectedMail);
-            setTopMails(
-              topMails.map((mail) =>
-                mail.id === selectedMail.id
-                  ? { ...mail, isRead: !mail.isRead }
-                  : mail
-              )
-            );
+            pushReadMail(selectedMail)
           }
         });
       });
   };
 
+  const pushReadMail = (email: SingleMail) => {
+    const thisMail = { ...email, isRead: !email.isRead }
+    setReadMails(() => [thisMail, ...readMails])
+    FetchUnreadMails()
+  }
   return (
-    <>
-      <h5 className="card-title">Welcome {accounts[0].name}</h5>
-
-      {topMails !== [] ? (
-        topMails.map((mail) => (
-          <MailItem key={mail.id} mail={mail} readMail={handleClick} />
-        ))
-      ) : (
-        <Spinner animation="border" />
-      )}
+    <Container>
+      <Tabs defaultActiveKey="unreadMails" id="controlled-tab-example" className="mb-3">
+        <Tab eventKey="unreadMails" title="Unread Mails">
+          {unreadMails !== [] ? (
+            unreadMails.map((mail) => (
+              <MailItem key={mail.id} mail={mail} readMail={handleClick} />
+            ))
+          ) : (
+            <Spinner animation="border" />
+          )}
+        </Tab>
+        <Tab eventKey="readMails" title="Recently Read Mails">
+          {readMails !== [] ? (
+            readMails.map((mail) => (
+              <MailItem key={mail.id} mail={mail} readMail={handleClick} />
+            ))
+          ) : (
+            <p>No Mail has been read in this session</p>
+          )}
+        </Tab>
+      </Tabs>
 
       <Modal
         show={show}
@@ -120,11 +127,14 @@ export const DisplayMails = () => {
           {<div dangerouslySetInnerHTML={{ __html: mailBody }} />}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={modalCloser}>
+          <Button variant="success" onClick={() => {
+            updateMail(selectedMail.id);
+            setShow(false);
+          }}>
             Mark as Read
           </Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </Container>
   );
 };
