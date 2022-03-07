@@ -101,7 +101,7 @@ export const DisplayMails = () => {
     <Container>
       <Tabs defaultActiveKey="unreadMails" id="controlled-tab-example" className="mb-3">
         {
-          unreadMails.length < 1 && (<Tab eventKey="unreadMails" title={`Loading Last 20 Unread Mails`}>
+          unreadMails.length < 1 && (<Tab eventKey="unreadMails" title={`Loading Last 10 Unread Mails`}>
             <Spinner animation="grow" variant="success" />
             <Spinner animation="grow" variant="success" />
             <Spinner animation="grow" variant="success" />
@@ -111,7 +111,7 @@ export const DisplayMails = () => {
         }
         {
           unreadMails.length > 1 && (
-            <Tab eventKey="unreadMails" title={`Last 20 Unread Mails`}>
+            <Tab eventKey="unreadMails" title={`Last 10 Unread Mails`}>
               {unreadMails.map((mail) => (
                 <MailItem key={mail.id} mail={mail} readMail={handleClick} />
               ))}
